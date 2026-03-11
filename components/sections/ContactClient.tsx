@@ -17,10 +17,10 @@ export function ContactClient() {
   const quick    = useForm<QuickForm>();
   const detailed = useForm<DetailedForm>();
 
-  async function submit(data:Record<string,unknown>, formType:Tab) {
+  async function submit(data: QuickForm | DetailedForm, formType: Tab) {
     setStatus("loading");
     try {
-      const res  = await fetch("/api/contact",{ method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({...data,formType}) });
+      const res  = await fetch("/api/contact",{ method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({...(data as object),formType}) });
       const json = await res.json();
       if (res.ok) { setStatus("success"); setMsg(json.message); quick.reset(); detailed.reset(); }
       else         { setStatus("error");   setMsg(json.error||"Something went wrong."); }
